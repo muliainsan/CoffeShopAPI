@@ -21,10 +21,19 @@ namespace CoffeShop.Services
             _context = context;
         }
 
-        public async Task<Response<Menu>> AddMenu(MenuRequest request)
+        public async Task<Response<Menu>> AddMenu(AddMenuRequest request)
         {
+
             var menu = new Menu()
             {
+                Id = new Guid(),
+                MenuName = request.MenuName,
+                Price = request.Price,
+                CategoryId = request.CategoryId,
+                
+
+                _CreatedDate = new DateTime(),
+                CreatedBy = "SYSTEM",
 
             };
 

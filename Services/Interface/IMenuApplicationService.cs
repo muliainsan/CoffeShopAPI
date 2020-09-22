@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace CoffeShop.Services.Interface
 {
-    interface IMenuApplicationService
+    public interface IMenuApplicationService
     {
 
-        Task<Response<Menu>> AddMenu(MenuRequest request);
+        Task<Response<Menu>> AddMenu(AddMenuRequest request);
 
     }
 }

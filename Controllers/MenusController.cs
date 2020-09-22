@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CoffeShop.Enties;
 using CoffeShop.EntitiesFramework;
+using CoffeShop.Models;
+using CoffeShop.Services.Interface;
+using CoffeShop.Models.Request;
 
 namespace CoffeShop.Controllers
 {
@@ -15,11 +18,20 @@ namespace CoffeShop.Controllers
     public class MenusController : ControllerBase
     {
         private readonly CoffeShopDbContext _context;
+        private readonly IMenuApplicationService _menuApplicationService;
 
-        public MenusController(CoffeShopDbContext context)
+        public MenusController(CoffeShopDbContext context, IMenuApplicationService menuApplicationService)
         {
             _context = context;
+            _menuApplicationService = menuApplicationService;
         }
+
+        [HttpPost]
+        public Task<Response<Menu>> AddMenu(AddMenuRequest request)
+        {
+            return _menuApplicationService.AddMenu(request);
+        }
+
 
         // GET: api/Menus
         [HttpGet]
