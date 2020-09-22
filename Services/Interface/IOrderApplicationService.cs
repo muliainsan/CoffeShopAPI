@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoffeShop.Services.Interface
 {
-    interface IOrderApplicationService
+    public interface IOrderApplicationService
     {
         Task<Response<Order>> PlaceOrder(OrderRequest request);
     }

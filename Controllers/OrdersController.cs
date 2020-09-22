@@ -19,9 +19,10 @@ namespace CoffeShop.Controllers
     {
         private readonly CoffeShopDbContext _context;
         private readonly IOrderApplicationService _orderApplicationService;
-        public OrdersController(CoffeShopDbContext context)
+        public OrdersController(CoffeShopDbContext context, IOrderApplicationService orderApplicationService)
         {
             _context = context;
+            _orderApplicationService = orderApplicationService;
         }
 
         // POST: api/Orders
@@ -33,6 +34,11 @@ namespace CoffeShop.Controllers
             return _orderApplicationService.PlaceOrder(order);
             
         }
+
+
+
+
+
 
 
 
