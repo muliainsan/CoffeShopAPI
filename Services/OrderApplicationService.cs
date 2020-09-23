@@ -26,16 +26,16 @@ namespace CoffeShop.Services
         public async Task<Response<Order>> PlaceOrder(OrderRequest request)
         {
             var order = new Order();
-            order.Id = new Guid();
-            order.OrderName = "SYSTEM";
+            
 
             double total = 0;
             List<OrderEntry> orderEntries = new List<OrderEntry>();
+            
             foreach (var temp in request.Orders)
             {
                 var orderEntry = new OrderEntry();
                 orderEntry.MenuId = temp.MenuId;
-                orderEntry.Price = temp.Price;
+                orderEntry.Price = _context.Menu.Where(w => w.Id== temp.MenuId).FirstOrDefault().Price;
                 orderEntry.Quantity = temp.Quantity;
                 orderEntry.OrderId = order.Id;
 
@@ -43,7 +43,7 @@ namespace CoffeShop.Services
                 orderEntry.CreatedBy = "SYSTEM";
                 orderEntry.Id = new Guid();
 
-                total += orderEntry.Price;
+                total += orderEntry.Price*temp.Quantity;
 
                 orderEntries.Add(orderEntry);
             }

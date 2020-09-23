@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoffeShop.EntitiesFramework;
+using CoffeShop.Services;
+using CoffeShop.Services.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +30,8 @@ namespace CoffeShop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<IMenuApplicationService, MenuApplicationService>();
+            services.AddScoped<IOrderApplicationService, OrderApplicationService>();
             services.AddDbContext<CoffeShopDbContext>(item => item.UseSqlServer(Configuration.GetConnectionString("Default")));
         }
 

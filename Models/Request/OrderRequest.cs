@@ -13,7 +13,6 @@ namespace CoffeShop.Models.Request
 
     public class MenuOrder{
         public Guid MenuId { get; set; }
-        public double Price { get; set; }
         public int Quantity { get; set; }
     }
 }

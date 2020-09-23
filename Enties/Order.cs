@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoffeShop.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,9 +8,9 @@ namespace CoffeShop.Enties
 {
     public class Order
     {
-        public Guid Id { get; set; }
-        public DateTime _CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
+        public Guid Id { get; set; } = new Guid();
+        public DateTime _CreatedDate { get; set; } = DateUtils.GetDateNow();
+        public string CreatedBy { get; set; } = Constant.Data.SYSTEM;
         public DateTime _DeletedDate { get; set; }
         public bool _DeletedFlag { get; set; }
         public string DeletedBy { get; set; }
@@ -17,9 +18,9 @@ namespace CoffeShop.Enties
         public string LastModifierBy { get; set; }
 
 
-        public string OrderName { get; set; }
+        public string OrderName { get; set; } = Constant.Data.SYSTEM;
         public double Total { get; set; }
-        public DateTime OrderDate { get; set; }
+        public DateTime OrderDate { get; set; } = DateUtils.GetDateNow();
 
     }
 }

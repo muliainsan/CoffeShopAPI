@@ -3,6 +3,7 @@ using CoffeShop.EntitiesFramework;
 using CoffeShop.Models;
 using CoffeShop.Models.Request;
 using CoffeShop.Services.Interface;
+using CoffeShop.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -30,10 +31,6 @@ namespace CoffeShop.Services
                 MenuName = request.MenuName,
                 Price = request.Price,
                 CategoryId = request.CategoryId,
-                
-
-                _CreatedDate = new DateTime(),
-                CreatedBy = "SYSTEM",
 
             };
 

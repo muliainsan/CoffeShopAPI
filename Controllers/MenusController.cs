@@ -13,7 +13,7 @@ using CoffeShop.Models.Request;
 
 namespace CoffeShop.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/menu")]
     [ApiController]
     public class MenusController : ControllerBase
     {
@@ -27,7 +27,8 @@ namespace CoffeShop.Controllers
         }
 
         [HttpPost]
-        public Task<Response<Menu>> AddMenu(AddMenuRequest request)
+        [Route("add")]
+        public Task<Response<Menu>> AddMenu([FromBody]AddMenuRequest request)
         {
             return _menuApplicationService.AddMenu(request);
         }

@@ -13,7 +13,7 @@ using CoffeShop.Services.Interface;
 
 namespace CoffeShop.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/order")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
@@ -29,6 +29,7 @@ namespace CoffeShop.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Route("add")]
         public Task<Response<Order>> PostOrder(OrderRequest order)
         {
             return _orderApplicationService.PlaceOrder(order);
