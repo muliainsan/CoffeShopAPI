@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CoffeShop.Services
@@ -49,6 +50,24 @@ namespace CoffeShop.Services
             {
                 TotalItems = displayData.Count,
                 Data = displayData
+            };
+        }
+
+        public Response<Menu> GetDetailMenu(IdOnlyRequest request)
+        {
+            var menuDetail = _context.Menu.Where(w => w._DeletedFlag != true && w.Id == request.Id);
+
+            if (menuDetail.FirstOrDefault() == null)
+            {
+                return new Response<Menu>()
+                {
+                    Status = System.Net.HttpStatusCode.NoContent,
+                    Message = "The Id Not found"
+                };
+            }
+            return new Response<Menu>()
+            {
+                Data = menuDetail.FirstOrDefault()
             };
         }
 

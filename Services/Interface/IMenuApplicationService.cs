@@ -14,5 +14,6 @@ namespace CoffeShop.Services.Interface
 
         Task<Response<Menu>> AddMenu(AddMenuRequest request);
         ListResponse<Menu> GetMenu(GetMenuRequest request);
+        Response<Menu> GetDetailMenu(IdOnlyRequest request);
     }
 }
