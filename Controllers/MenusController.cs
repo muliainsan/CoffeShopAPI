@@ -36,17 +36,18 @@ namespace CoffeShop.Controllers
 
         // GET: api/Menus
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Menu>>> GetMenu()
+        [Route("get")]
+        public ListResponse<Menu> GetMenu([FromBody]GetMenuRequest request)
         {
-            
-            return await _context.Menu.ToListAsync();
+            return _menuApplicationService.GetMenu(request);
         }
 
         // GET: api/Menus/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Menu>> GetMenu(Guid id)
+        [HttpGet]
+        [Route("get/detail")]
+        public async Task<ActionResult<Menu>> GetDetailMenu(IdOnlyRequest request)
         {
-            var menu = await _context.Menu.FindAsync(id);
+            var menu = await _context.Menu.FindAsync(request);
 
             if (menu == null)
             {

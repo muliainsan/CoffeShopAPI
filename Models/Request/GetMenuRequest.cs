@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoffeShop.Models.Request
 {
-    public class MenuRequest
+    public class GetMenuRequest
     {
         public string MenuName { get; set; }
         public double Price { get; set; }

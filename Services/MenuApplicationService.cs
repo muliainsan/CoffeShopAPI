@@ -39,5 +39,31 @@ namespace CoffeShop.Services
             await _context.SaveChangesAsync();
             return new Response<Menu>();
         }
+
+        public ListResponse<Menu> GetMenu(GetMenuRequest request)
+        {
+            var menus = _filter(request);
+
+            var displayData = menus.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).ToList();
+            return new ListResponse<Menu>()
+            {
+                TotalItems = displayData.Count,
+                Data = displayData
+            };
+        }
+
+        private IQueryable<Menu> _filter(GetMenuRequest request)
+        {
+            var query = _context.Menu.Where(w => w._DeletedFlag != true);
+
+            if (!string.IsNullOrEmpty(request.MenuName))
+            {
+                query = query.Where(p => p.MenuName != null &&
+                                         p.MenuName.ToLower().Contains(request.MenuName.ToLower()));
+            }
+            query = query.OrderBy(o => o.MenuName);
+
+            return query;
+        }
     }
 }

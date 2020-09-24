@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoffeShop.Enties;
+using CoffeShop.EntitiesFramework;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -17,23 +19,21 @@ namespace CoffeShop.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private readonly CoffeShopDbContext _context;
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, CoffeShopDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
+        
+
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public List<OrderEntry> Test()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+
+            
+            return _context.OrderEntry.Select(p => p).GroupBy(g => g.CreatedBy).Select(s => s.First()).ToList() ;
         }
     }
 }
