@@ -2,6 +2,7 @@
 using CoffeShop.EntitiesFramework;
 using CoffeShop.Models;
 using CoffeShop.Models.Request;
+using CoffeShop.Models.Request.Menu;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,7 @@ namespace CoffeShop.Services.Interface
         Task<Response<Menu>> AddMenu(AddMenuRequest request);
         ListResponse<Menu> GetMenu(GetMenuRequest request);
         Response<Menu> GetDetailMenu(IdOnlyRequest request);
+        Response<Menu> UpdateMenu(UpdateMenuRequest request);
+        Response<Menu> DeleteMenu(IdOnlyRequest request);
     }
 }

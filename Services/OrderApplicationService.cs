@@ -3,6 +3,7 @@ using CoffeShop.EntitiesFramework;
 using CoffeShop.Models;
 using CoffeShop.Models.Request;
 using CoffeShop.Services.Interface;
+using CoffeShop.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
@@ -39,7 +40,7 @@ namespace CoffeShop.Services
                 orderEntry.Quantity = temp.Quantity;
                 orderEntry.OrderId = order.Id;
 
-                orderEntry._CreatedDate = new DateTime();
+                orderEntry._CreatedDate = DateUtils.GetDateNow();
                 orderEntry.CreatedBy = "SYSTEM";
                 orderEntry.Id = new Guid();
 

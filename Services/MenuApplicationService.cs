@@ -2,6 +2,7 @@
 using CoffeShop.EntitiesFramework;
 using CoffeShop.Models;
 using CoffeShop.Models.Request;
+using CoffeShop.Models.Request.Menu;
 using CoffeShop.Services.Interface;
 using CoffeShop.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -28,11 +29,9 @@ namespace CoffeShop.Services
 
             var menu = new Menu()
             {
-                Id = new Guid(),
                 MenuName = request.MenuName,
                 Price = request.Price,
                 CategoryId = request.CategoryId,
-
             };
 
 
@@ -43,7 +42,7 @@ namespace CoffeShop.Services
 
         public ListResponse<Menu> GetMenu(GetMenuRequest request)
         {
-            var menus = _filter(request);
+            var menus = _filterQuery(request);
 
             var displayData = menus.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).ToList();
             return new ListResponse<Menu>()
@@ -53,16 +52,32 @@ namespace CoffeShop.Services
             };
         }
 
+        private IQueryable<Menu> _filterQuery(GetMenuRequest request)
+        {
+            var query = _context.Menu.Where(w => w._DeletedFlag != true);
+
+            if (!string.IsNullOrEmpty(request.MenuName))
+            {
+                query = _context.Menu.Where(p => p.MenuName != null &&
+                                         p.MenuName.ToLower().Contains(request.MenuName.ToLower()));
+            }
+            query = query.OrderBy(o => o.MenuName);
+
+            return query;
+        }
+
         public Response<Menu> GetDetailMenu(IdOnlyRequest request)
         {
-            var menuDetail = _context.Menu.Where(w => w._DeletedFlag != true && w.Id == request.Id);
+            var Id = Guid.Parse(request.Id);
+
+            var menuDetail = _context.Menu.Where(w => w._DeletedFlag != true && w.Id == Id);
 
             if (menuDetail.FirstOrDefault() == null)
             {
                 return new Response<Menu>()
                 {
                     Status = System.Net.HttpStatusCode.NoContent,
-                    Message = "The Id Not found"
+                    Message = "Id Not found"
                 };
             }
             return new Response<Menu>()
@@ -71,18 +86,54 @@ namespace CoffeShop.Services
             };
         }
 
-        private IQueryable<Menu> _filter(GetMenuRequest request)
+        public Response<Menu> UpdateMenu(UpdateMenuRequest request)
         {
-            var query = _context.Menu.Where(w => w._DeletedFlag != true);
+            var menuQuery = _context.Menu.Where(w =>w.Id == request.Id);
 
-            if (!string.IsNullOrEmpty(request.MenuName))
+            if (menuQuery.FirstOrDefault() == null)
             {
-                query = query.Where(p => p.MenuName != null &&
-                                         p.MenuName.ToLower().Contains(request.MenuName.ToLower()));
-            }
-            query = query.OrderBy(o => o.MenuName);
+                return new Response<Menu>()
+                {
+                    Status = System.Net.HttpStatusCode.NoContent,
+                    Message = "Id Not found"
+                };
+            };
 
-            return query;
+            var menu = menuQuery.FirstOrDefault();
+
+            menu.MenuName = request.MenuName;
+            menu.Price = request.Price;
+            menu.CategoryId = request.CategoryId;
+
+            _context.Entry(menu).State = EntityState.Modified;
+            _context.SaveChanges();
+            return new Response<Menu>();
+        }
+
+        public Response<Menu> DeleteMenu(IdOnlyRequest request)
+        {
+            var Id = Guid.Parse(request.Id);
+
+            var menuQuery = _context.Menu.Where(w => w.Id == Id);
+
+            if (menuQuery.FirstOrDefault() == null)
+            {
+                return new Response<Menu>()
+                {
+                    Status = System.Net.HttpStatusCode.NoContent,
+                    Message = "Id Not found"
+                };
+            };
+
+            var menu = menuQuery.FirstOrDefault();
+
+            menu._DeletedFlag = true;
+            menu._DeletedDate = DateUtils.GetDateNow();
+            menu.DeletedBy = Constant.Data.SYSTEM;
+
+            _context.Entry(menu).State = EntityState.Modified;
+            _context.SaveChanges();
+            return new Response<Menu>();
         }
     }
 }

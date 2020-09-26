@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CoffeShop.Models.Request
+namespace CoffeShop.Models.Request.Menu
 {
     public class GetMenuRequest
     {

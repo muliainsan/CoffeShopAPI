@@ -10,6 +10,7 @@ using CoffeShop.EntitiesFramework;
 using CoffeShop.Models;
 using CoffeShop.Services.Interface;
 using CoffeShop.Models.Request;
+using CoffeShop.Models.Request.Menu;
 
 namespace CoffeShop.Controllers
 {
@@ -45,81 +46,24 @@ namespace CoffeShop.Controllers
         // GET: api/Menus/5
         [HttpGet]
         [Route("get/detail")]
-        public async Task<ActionResult<Menu>> GetDetailMenu(IdOnlyRequest request)
+        public Response<Menu> GetDetailMenu([FromBody] IdOnlyRequest request)
         {
-            var menu = await _context.Menu.FindAsync(request);
-
-            if (menu == null)
-            {
-                return NotFound();
-            }
-
-            return menu;
+            return _menuApplicationService.GetDetailMenu(request); ;
         }
 
-        // PUT: api/Menus/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMenu(Guid id, Menu menu)
-        {
-            if (id != menu.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(menu).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MenuExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Menus
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Menu>> PostMenu(Menu menu)
+        [Route("update")]
+        public Response<Menu> UpdateMenu([FromBody]UpdateMenuRequest request)
         {
-            _context.Menu.Add(menu);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetMenu", new { id = menu.Id }, menu);
+            return _menuApplicationService.UpdateMenu(request);
         }
 
-        // DELETE: api/Menus/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Menu>> DeleteMenu(Guid id)
+        [HttpPost]
+        [Route("delete")]
+        public Response<Menu> DeleteMenu(IdOnlyRequest request)
         {
-            var menu = await _context.Menu.FindAsync(id);
-            if (menu == null)
-            {
-                return NotFound();
-            }
-
-            _context.Menu.Remove(menu);
-            await _context.SaveChangesAsync();
-
-            return menu;
+            return _menuApplicationService.DeleteMenu(request);
         }
 
-        private bool MenuExists(Guid id)
-        {
-            return _context.Menu.Any(e => e.Id == id);
-        }
     }
 }
