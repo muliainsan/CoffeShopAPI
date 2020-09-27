@@ -70,7 +70,7 @@ namespace CoffeShop.Services
         {
             var Id = Guid.Parse(request.Id);
 
-            var menuDetail = _context.Menu.Where(w => w._DeletedFlag != true && w.Id == Id);
+            var menuDetail = _context.Menu.Where(w => w.Id == Id);
 
             if (menuDetail.FirstOrDefault() == null)
             {

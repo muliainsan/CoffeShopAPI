@@ -10,6 +10,7 @@ using CoffeShop.EntitiesFramework;
 using CoffeShop.Models.Request;
 using CoffeShop.Models;
 using CoffeShop.Services.Interface;
+using CoffeShop.Models.Request.Order;
 
 namespace CoffeShop.Controllers
 {
@@ -25,116 +26,46 @@ namespace CoffeShop.Controllers
             _orderApplicationService = orderApplicationService;
         }
 
-        // POST: api/Orders
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         [Route("add")]
-        public Task<Response<Order>> PostOrder(OrderRequest order)
+        public Task<Response<Order>> PostOrder(AddOrderRequest order)
         {
             return _orderApplicationService.PlaceOrder(order);
             
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrder()
+        [Route("get")]
+        public ListResponse<Order> GetOrder([FromBody] GetOrderRequest request)
         {
-            return await _context.Order.ToListAsync();
+            return _orderApplicationService.GetOrder(request);
         }
 
-        // GET: api/Orders/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(Guid id)
+        [HttpGet]
+        [Route("get/detail")]
+        public Response<Order> GetDetailOrder([FromBody] IdOnlyRequest request)
         {
-            var order = await _context.Order.FindAsync(id);
-
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return order;
+            return _orderApplicationService.GetDetailOrder(request); ;
         }
 
-        // PUT: api/Orders/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(Guid id, Order order)
-        {
-            if (id != order.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(order).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Orders
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        [Route("update")]
+        public Response<Order> UpdateOrder([FromBody] UpdateOrderRequest request)
         {
-            _context.Order.Add(order);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetOrder", new { id = order.Id }, order);
+            return _orderApplicationService.UpdateOrder(request);
         }
 
-        // DELETE: api/Orders/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Order>> DeleteOrder(Guid id)
+        [HttpPost]
+        [Route("delete")]
+        public Response<Order> DeleteOrder(IdOnlyRequest request)
         {
-            var order = await _context.Order.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            _context.Order.Remove(order);
-            await _context.SaveChangesAsync();
-
-            return order;
+            return _orderApplicationService.DeleteOrder(request);
         }
 
-        private bool OrderExists(Guid id)
-        {
-            return _context.Order.Any(e => e.Id == id);
-        }
+
+
+
+
     }
 }

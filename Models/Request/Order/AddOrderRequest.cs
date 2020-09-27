@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CoffeShop.Models.Request
+namespace CoffeShop.Models.Request.Order
 {
-    public class OrderRequest
+    public class AddOrderRequest
     {
         public List<MenuOrder> Orders{ get; set; }
 
