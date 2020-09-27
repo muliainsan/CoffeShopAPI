@@ -2,6 +2,7 @@
 using SQLitePCL;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,19 +24,6 @@ namespace CoffeShop.Enties
         public double Total { get; set; }
         public DateTime OrderDate { get; set; } = DateUtils.GetDateNow();
         public List<OrderEntry> OrderEntries { get; set; }
-
-        public List<OrderEntry> CspAccountsFiltered
-        {
-            get
-            {
-                if (OrderEntries != null)
-                {
-                    return OrderEntries.Where(p => !p._DeletedFlag && p != null).ToList();
-                }
-
-                return null;
-            }
-        }
 
     }
 }

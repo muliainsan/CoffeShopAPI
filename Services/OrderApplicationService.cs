@@ -166,14 +166,12 @@ namespace CoffeShop.Services
             };
 
             var order = orderQuery.FirstOrDefault();
+            
             _deleteOrderEntry(order);
-
 
             order._DeletedFlag = true;
             order._DeletedDate = DateUtils.GetDateNow();
             order.DeletedBy = Constant.Data.SYSTEM;
-
-
 
             _context.Entry(order).State = EntityState.Modified;
             _context.SaveChanges();

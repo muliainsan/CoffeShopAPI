@@ -1,6 +1,7 @@
 ﻿using CoffeShop.Utilities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace CoffeShop.Enties
         public bool _LastModifier { get; set; }
         public string LastModifierBy { get; set; }
 
-
+        [ForeignKey("Order")]
         public Guid OrderId { get; set; }
         public Guid MenuId { get; set; }
         public double Price { get; set; }

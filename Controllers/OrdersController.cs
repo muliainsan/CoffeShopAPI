@@ -31,7 +31,6 @@ namespace CoffeShop.Controllers
         public Task<Response<Order>> PostOrder(AddOrderRequest order)
         {
             return _orderApplicationService.PlaceOrder(order);
-            
         }
 
 
