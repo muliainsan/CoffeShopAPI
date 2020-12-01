@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CoffeShop.Enties;
 using CoffeShop.EntitiesFramework;
+using CoffeShop.Services.Interface;
+using CoffeShop.Models;
+using CoffeShop.Models.Request.Category;
+using CoffeShop.Models.Request;
 
 namespace CoffeShop.Controllers
 {
@@ -15,96 +19,47 @@ namespace CoffeShop.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly CoffeShopDbContext _context;
+        private readonly ICategoryApplicationService _categoryApplicationService;
 
-        public CategoriesController(CoffeShopDbContext context)
+        public CategoriesController(CoffeShopDbContext context, ICategoryApplicationService categoryApplicationService)
         {
             _context = context;
+            _categoryApplicationService = categoryApplicationService;
         }
 
-        // GET: api/Categories
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategory()
-        {
-            return await _context.Category.ToListAsync();
-        }
-
-        // GET: api/Categories/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(Guid id)
-        {
-            var category = await _context.Category.FindAsync(id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return category;
-        }
-
-        // PUT: api/Categories/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(Guid id, Category category)
-        {
-            if (id != category.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(category).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Categories
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        [Route("add")]
+        public Task<Response<Category>> AddCategory([FromBody] AddCategoryRequest request)
         {
-            _context.Category.Add(category);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
+            return _categoryApplicationService.AddCategory(request);
         }
 
-        // DELETE: api/Categories/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Category>> DeleteCategory(Guid id)
+        [HttpGet]
+        [Route("get")]
+        public ListResponse<Category> GetCategory([FromBody] GetCategoryRequest request)
         {
-            var category = await _context.Category.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            _context.Category.Remove(category);
-            await _context.SaveChangesAsync();
-
-            return category;
+            return _categoryApplicationService.GetCategory(request);
         }
 
-        private bool CategoryExists(Guid id)
+        [HttpGet]
+        [Route("get/detail")]
+        public Response<Category> GetDetailCategory([FromBody] IdOnlyRequest request)
         {
-            return _context.Category.Any(e => e.Id == id);
+            return _categoryApplicationService.GetDetailCategory(request); ;
+        }
+
+        [HttpPost]
+        [Route("update")]
+        public Response<Category> UpdateCategory([FromBody] UpdateCategoryRequest request)
+        {
+            return _categoryApplicationService.UpdateCategory(request);
+        }
+
+        [HttpPost]
+        [Route("delete")]
+        public Response<Category> DeleteCategory(IdOnlyRequest request)
+        {
+            return _categoryApplicationService.DeleteCategory(request);
         }
     }
 }
