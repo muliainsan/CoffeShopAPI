@@ -10,8 +10,7 @@ namespace CoffeShop.Models.Request.Order
     {
         public Guid Id { get; set; }
         public string OrderName { get; set; }
-        public double Total { get; set; }
+        public double Total { get; set; } 
         public DateTime OrderDate { get; set; }
-        public List<OrderEntry> OrderEntries { get; set; }
     }
 }
