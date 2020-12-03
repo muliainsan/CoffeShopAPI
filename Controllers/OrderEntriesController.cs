@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CoffeShop.Enties;
 using CoffeShop.EntitiesFramework;
+using CoffeShop.Models;
+using CoffeShop.Services.Interface;
+using CoffeShop.Models.Request.OrderEntry;
+using CoffeShop.Models.Request;
 
 namespace CoffeShop.Controllers
 {
@@ -15,96 +19,51 @@ namespace CoffeShop.Controllers
     public class OrderEntriesController : ControllerBase
     {
         private readonly CoffeShopDbContext _context;
+        public readonly IOrderEntryApplicationService _OrderEntryApplicationService;
 
-        public OrderEntriesController(CoffeShopDbContext context)
+        public OrderEntriesController(CoffeShopDbContext context, IOrderEntryApplicationService OrderEntryApplicationService)
         {
             _context = context;
+            _OrderEntryApplicationService = OrderEntryApplicationService;
         }
 
-        // GET: api/OrderEntries
+        /*[HttpPost]
+        [Route("add")]
+        public Task<Response<OrderEntry>> AddOrderEntry([FromBody] AddOrderEntryRequest request)
+        {
+            return _OrderEntryApplicationService.AddOrderEntry(request);
+        }*/
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderEntry>>> GetOrderEntry()
+        [Route("get")]
+        public ListResponse<OrderEntry> GetOrderEntry([FromBody] GetOrderEntryRequest request)
         {
-            return await _context.OrderEntry.ToListAsync();
+            return _OrderEntryApplicationService.GetOrderEntry(request);
         }
 
-        // GET: api/OrderEntries/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<OrderEntry>> GetOrderEntry(Guid id)
+        [HttpGet]
+        [Route("get/detail")]
+        public Response<OrderEntry> GetDetailOrderEntry([FromBody] IdOnlyRequest request)
         {
-            var orderEntry = await _context.OrderEntry.FindAsync(id);
-
-            if (orderEntry == null)
-            {
-                return NotFound();
-            }
-
-            return orderEntry;
+            return _OrderEntryApplicationService.GetDetailOrderEntry(request); ;
         }
 
-        // PUT: api/OrderEntries/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrderEntry(Guid id, OrderEntry orderEntry)
-        {
-            if (id != orderEntry.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(orderEntry).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderEntryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/OrderEntries
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<OrderEntry>> PostOrderEntry(OrderEntry orderEntry)
+        [Route("update")]
+        public Response<OrderEntry> UpdateOrderEntry([FromBody] UpdateOrderEntryRequest request)
         {
-            _context.OrderEntry.Add(orderEntry);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetOrderEntry", new { id = orderEntry.Id }, orderEntry);
+            return _OrderEntryApplicationService.UpdateOrderEntry(request);
         }
 
-        // DELETE: api/OrderEntries/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<OrderEntry>> DeleteOrderEntry(Guid id)
+        [HttpPost]
+        [Route("delete")]
+        public Response<OrderEntry> DeleteOrderEntry(IdOnlyRequest request)
         {
-            var orderEntry = await _context.OrderEntry.FindAsync(id);
-            if (orderEntry == null)
-            {
-                return NotFound();
-            }
-
-            _context.OrderEntry.Remove(orderEntry);
-            await _context.SaveChangesAsync();
-
-            return orderEntry;
-        }
-
-        private bool OrderEntryExists(Guid id)
-        {
-            return _context.OrderEntry.Any(e => e.Id == id);
+            return _OrderEntryApplicationService.DeleteOrderEntry(request);
         }
     }
+
+
+
 }
+
